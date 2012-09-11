@@ -1,7 +1,7 @@
 XTiger XML specification
 ========================
 
-This is the home of the XTiger XML specification. That repository is used to edit and publish the [latest version](https://ssire.github.com/xtiger-xml-spec) of the specification as GitHub pages.
+This is the home of the XTiger XML specification. That repository is used to edit and publish the [latest version](http://ssire.github.com/xtiger-xml-spec/) of the specification as GitHub pages.
 
 It replaces the [former document](http://media.epfl.ch/Templates/XTiger-XML-spec.html) hosted at the [MEDIA group](http://media.epfl.ch) of the Ecole Polytechnique de Lausanne ([EPFL](http://ww.epfl.ch)).
 
