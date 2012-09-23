@@ -5,37 +5,40 @@
   </head>
   <body>
     <h1>XTiger XML Language Specification</h1>
-    <p>Updated: Mar 30, 2011 by Stéphane Sire (<a href="http://www.media.epfl.ch">Media</a> research group)</p>
+    <p>Updated: September 23, 2012; Editor: Stéphane Sire (<a href="http://www.oppidoc.fr">Oppidoc</a> and <a href="http://www.media.epfl.ch">Media</a> research group)</p>
     <h3>Notice</h3>
-    <p>You should have a reasonable understanding of XHTML and XML to be able to read this document. You are strongly encouraged to try the primitive editors described in this document by opening the document templates that comes with the <a href="https://github.com/ssire/axel">AXEL</a> distribution.</p>
+    <p>You should have a reasonable understanding of XHTML and XML to be able to read this document. You are strongly encouraged to try the primitive editors described in this document by opening some template documents inside the <a href="http://ssire.github.com/axel/editor/editor.xhtml">AXEL demonstration editor</a> which is available online.</p>
     <h3>Table of content</h3>
     <ol>
       <li><a href="#intro">Introduction to the XTiger XML language</a></li>
       <li><a href="#anatomy">Anatomy of an XTiger XML document</a></li>
       <li><a href="#primitive">Primitive component types</a></li>
-      <li><a href="#head">The xt:head element</a></li>
-      <li><a href="#component">The xt:component element</a></li>
-      <li><a href="#use">The xt:use element</a></li>
-      <li><a href="#attribute">The xt:attribute element</a></li>
-      <li><a href="#marker">The xt:menu-marker element</a></li>
-      <li><a href="#repeat">The xt:repeat element</a></li>
-      <li><a href="#string">The string primitive component type</a></li>
-      <li><a href="#text">The text primitive component type</a></li>
-      <li><a href="#select">The select primitive component type</a></li>
+      <li><a href="#head">The "xt:head" element</a></li>
+      <li><a href="#component">The "xt:component" element</a></li>
+      <li><a href="#use">The "xt:use" element</a></li>
+      <li><a href="#attribute">The "xt:attribute" element</a></li>
+      <li><a href="#marker">The "xt:menu-marker" element</a></li>
+      <li><a href="#repeat">The "xt:repeat" element</a></li>
+      <li><a href="#text">The "text" primitive component type</a></li>
+      <li><a href="#select">The "select" primitive component type</a></li>
       <li><a href="#processing">XTiger XML Processing Model</a></li>
       <li><a href="#styling">Styling XTiger XML templates</a></li>
-      <li><a href="#summary">Summary tables of supported attributes and parameters</a></li>
+      <li><a href="#summary">Summary tables</a></li>
+      <li><a href="#deprecated">Deprecated features</a></li>
     </ol>
     <h2 id="intro">Introduction to the XTiger XML language</h2>
-    <p>The XTiger XML language is derived from the XTiger language (<a href="http://www.w3.org/Amaya/Templates/XTiger-spec.html">web link</a>).</p>
-    <p>XTiger XML (XTX) defines several XML elements and their attributes which can be mixed on a host document using a special namespace. Currently it uses the same namespace as XTiger (http://ns.inria.org/xtiger) although this must be changed in the future since it is not stricto-senso compatible. For convenience this namespace is often associated with the xt prefix (e.g. <tt>xmlns:xt="http://ns.inria.org/xtiger"</tt>) that will be used in the rest of this document.</p>
-    <p>Currently XTiger XML supports only an XHTML host document. The combination of XTiger XML with an XHTML host document constitutes a <strong>template document</strong>. You can name the template document with any suffixe, but it is wised to name it with an .html or a .xhtml suffix to be able to open it directly inside a browser. However if you open it without transforming it with an XTX processor you may only see parts of it.</p>
-    <p>The purpose of a document template is to describe a visual presentation for a document that will be used to edit XML data. This is similar to a formular. When the document template is processed with a XTX processor it becomes interactive and the user can enter data. The XTX  processor is also able to load XML data into the template and to save back XML data from the template. Hence XTX is a kind of control language that stands between the view (the XHTML document) and the data (the XML data). </p>
-    <p>The XTiger XML Language is embedded inside an XHTML host language and describe a mapping from this document to an XML Content Model.</p>
-    <p>(DATA) XML Content Model &lt;-------- XTiger XML Language (CONTROL) -----&gt; XHTML Host Language  (VIEW)</p>
-    <p>In summary, when writing an XTiger XML template document, you should have on one hand an idea of the XML Content Model you want to edit, and on the other hand an idea of a presentation document based on XHTML that you would like your formated data looks like. The XTX processor will transform the XTX elements embedded inside the XHTML template into dynamical data entry fields that will allow to edit  the document and to save the edited data to XML when finished. This is what we call pseudo-WYSIWIG editing.</p>
+    <p>XTiger XML defines several XML elements and their attributes which can be mixed on a host document using the <tt>xt:</tt> prefix associated with the <tt>"http://ns.inria.org/xtiger"</tt> namespace. Note that this namespace was first introduced at INRIA for an <a href="http://www.w3.org/Amaya/Templates/XTiger-spec.html">XTiger language</a> that is a precursor of XTiger XML. The rest of this document will use the term XTiger for XTiger XML.</p>
+    <p>The combination of XTiger with an host document forms a <strong>template document</strong>. Such a document can be processed by an XTiger processing engine for different purposes.</p>
+    <p>The main purpose of a document template is to describe a visual presentation for a document that will be used to edit XML data. This is similar to a formular. When the template document is processed with an adequate engine it becomes interactive and the user can enter data. The processing engine is also able to load XML data into the template and to save back XML data from the template. </p>
+    <p>Currently there is one XTiger processing engine called <strong>AXEL</strong> (Adaptable XML Editing Library).  It transforms template documents hosted on an XHTML document into XML authoring applications. You can name the template document with any suffix, but it is wised to name it with an <em>".html"</em> or a <em>".xhtml"</em> suffix to be able to open it directly inside a browser. Note that if you open it without transforming it you may only see parts of it.</p>
+    <p>The figure below summarizes the languages involved in a template document : the host language (XHTML) serves a a view to generate a document form, some XTiger attributes and elements define some contraints driving the evolution of the structure of the host document while editing, two XTiger attributes (<em>label</em> and <em>name</em>) define a mapping from the document form to a target XML content model that a linearization algorithm can generate at any time.</p>
+    <div class="illustration">
+      <img src="images/layers.png"/>
+      <p>Layered view of an XTiger XML document</p>
+    </div>
+    <p>In summary, when writing an XTiger XML template document, you should have on one hand an idea of the XML Content Model you want to edit, and on the other hand an idea of a presentation document based on XHTML that you would like your formatted data looks like. The processing engine will transform some of the XTiger elements embedded inside the XHTML template into dynamical data entry fields that will allow to edit  the document and to save the edited data to XML when finished. This is what we call <em>pseudo-WYSIWIG</em> editing.</p>
     <h2 id="anatomy">Anatomy of an XTiger XML document</h2>
-    <p>A typical XTX document looks like the following simple "hello world" document template below:</p>
+    <p>A typical XTiger document looks like the following simple "hello world" document template below:</p>
     <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
 &lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
 &lt;head&gt;
@@ -58,7 +61,7 @@
     <p>As you can see, it contains two parts: </p>
     <ul>
       <li>a <tt>xt:head</tt> section within the XHTML document <tt>head</tt> section; it contains some definition of some component types inside <tt>xt:component</tt> elements which can themselves contain the same content as the body part of the document;</li>
-      <li>the <tt>body</tt> part of the XHTML document which can, in addition to its XHTML content, declare some inclusion of types (i.e. components) and some constaints on the document structure (i.e. repetition and optionality) with the XTX vocabulary.</li>
+      <li>the <tt>body</tt> part of the XHTML document which can, in addition to its XHTML content, declare some inclusion of types (i.e. components) and some constaints on the document structure (i.e. repetition and optionality) with the XTiger vocabulary.</li>
     </ul>
     <p>The example above declares a single component type named friend. This component type is included in the body section where it can be repeated between zero and a non limited number of times. Consequently, when used to enter data, the previous template can produce the following target XML document:</p>
     <pre>&lt;greetings&gt;
@@ -76,13 +79,13 @@
       <li>a <tt>label</tt> attribute which can be set i) on the <tt>xt:head</tt> element to define the root of the target XML document, ii) when repeating some content (in the example above see the <tt>label="persons"</tt> on the repetition) and iii) when including a component type (see the <tt>label="name"</tt> declaration on the component type inclusion);</li>
       <li>a <tt>name</tt> attribute which is mandatory when declaring an attribute (not shown in the example above).</li>
     </ul>
-    <p>In the document template above you may also notice a <tt>xt:menu-marker</tt> element. This element is just a hint given to the XTX processor for placing the Add / Remove buttons that will be generated to control the repetition inside the <tt>xt:repeat</tt> element. In the document above these buttons will be inserted in place of the <tt>xt:menu-marker</tt>, which means at the end of the <tt>li</tt> element. This way, they will appear at the end of the line and not on a new line, which would break the document layout. This type of hint if precious for the XTX processor as it allows to keep a more natural document appearance when editing data.</p>
+    <p>In the document template above you may also notice a <tt>xt:menu-marker</tt> element. This element is just a hint given to the XTiger processor for placing the Add / Remove buttons that will be generated to control the repetition inside the <tt>xt:repeat</tt> element. In the document above these buttons will be inserted in place of the <tt>xt:menu-marker</tt>, which means at the end of the <tt>li</tt> element. This way, they will appear at the end of the line and not on a new line, which would break the document layout. This type of hint if precious for the XTiger processor as it allows to keep a more natural document appearance when editing data.</p>
     <h2 id="primitive">Primitive component types</h2>
-    <p>XTX comes with a set of built-in component types which are ultimately mapped to editable user interface text input fields. These built-in component types allow the user to enter or to modify data into the document. Consequently a document template that does not reference any built-in component type will not allow users to input new data, at most it will allow users to repeat  static parts of the document, to change their order or to choose between different parts, which is not quite useful.</p>
+    <p>XTiger defines a set of built-in component types which are ultimately mapped to editable user interface text input fields. These built-in component types allow the user to enter or to modify data into the document. Consequently a template document that does not reference any built-in component type will not allow users to input new data, at most it will allow users to repeat  static parts of the document, to change their order or to choose between different parts, which is not quite useful.</p>
     <p>The  built-in component types are included in the template document with an <tt>xt:use</tt> element with a pre-defined types attribute set to the unique type name of the built-in component. For instance the following declaration &lt;<tt>xt:use types="text"</tt>&gt;<tt>name</tt>&lt;<tt>/xt:use/</tt>&gt; includes a text editor that can be used to input a name, as suggested by its default value which is put in the element content.</p>
-    <p>The XTX library can be extended with new buil-in components. This is usually done by creating a Javascript plugin which has to register it's type name to the library. This way it is possible to create many different editing interaction styles by using different plugin editors. For instance a common use of plugin editors is to create editors that constrain the input data, such as entering a date, or a number, uploading an image, etc.</p>
-    <p>The XTX library comes with 3 built-in component types which are explained below: <em>string</em>, <em>text</em> and <em>select</em>.</p>
-    <h2 id="head">The <tt>xt:head</tt> element</h2>
+    <p>An XTiger processor component library can be extended with new built-in components. This is usually done by creating a Javascript plugin which has to register it's type name to the library. This way it is possible to create many different editing interaction styles by using different plugin editors. For instance a common use of plugin editors is to create editors that constrain the input data, such as entering a date, or a number, uploading an image, etc.</p>
+    <p>An XTiger processor should at least implement 2 primitive component types: <tt>text</tt> and <tt>select</tt>. They will be described below.</p>
+    <h2 id="head">The <tt>"xt:head"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -93,7 +96,7 @@
         <span><tt>head</tt> (XHTML)</span>
       </p>
     </div>
-    <p>The <strong>xt:head element</strong> contains the component types declaration section of the template document. It must be present even if it is empty.</p>
+    <p>The <tt>xt:head</tt> element contains the component types declaration section of the template document. It must be present even if it is empty.</p>
     <h3>Attributes</h3>
     <table>
       <thead>
@@ -113,7 +116,7 @@
         </tr>
       </tbody>
     </table>
-    <p>Currently XTX does not interpret the other attributes for this element which are defined in the original XTiger specification.</p>
+    <p>Currently XTiger XML does not interpret the other attributes for this element which are defined in the <a href="http://www.w3.org/Amaya/Templates/XTiger-spec.html">original XTiger specification</a>.</p>
     <h3>Example</h3>
     <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
 &lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
@@ -126,7 +129,7 @@
 &lt;/html&gt;</pre>
     <p>The template above generates only one XML content model:</p>
     <pre>&lt;test/&gt;</pre>
-    <h2 id="component">The <tt>xt:component</tt> element</h2>
+    <h2 id="component">The <tt>"xt:component"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -137,7 +140,7 @@
         <span><tt>xt:head</tt></span>
       </p>
     </div>
-    <p>The <strong>xt:component element</strong> declares a new component type which can be included later on with an <tt>xt:use</tt> element. The content of the component may be any regular XHTML, or it can includes other XTX elements or both. The creation of nested components can be achieved by including other components within a component through one or more <tt>xt:use</tt> elements. This will also create nested XML data structures as the <tt>xt:use</tt> elements can be mapped to a  tag name in the XML content model of the template (see below).</p>
+    <p>The <tt>xt:component</tt> element declares a new component type which can be included later on with an <tt>xt:use</tt> element. The content of the component may be any regular XHTML, or it can includes other XTiger elements or both. The creation of nested components can be achieved by including other components within a component through one or more <tt>xt:use</tt> elements. This will also create nested XML data structures as the <tt>xt:use</tt> elements can be mapped to a  tag name in the XML content model of the template (see below).</p>
     <p>An <tt>xt:component</tt> may contain one or several optional <tt>xt:menu-marker</tt> elements. Each one is  significant only if it is included within the scope of an <tt>xt:repeat</tt> element. In that case the <tt>xt:menu-marker</tt> element will be replaced by the user interface widget(s) for the repetition menu.</p>
     <h3>Attributes</h3>
     <table>
@@ -180,7 +183,7 @@ in &lt;xt:use types="string" label="place"&gt;city&lt;/xt:use&gt;&lt;/p&gt;
  &lt;xt:use <strong>types="t_introduction"</strong> label="birth"/&gt;
 &lt;/body&gt;
 &lt;/html&gt;</pre>
-    <h2 id="use">The <tt>xt:use</tt> element</h2>
+    <h2 id="use">The <tt>"xt:use"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -191,9 +194,38 @@ in &lt;xt:use types="string" label="place"&gt;city&lt;/xt:use&gt;&lt;/p&gt;
         <span><tt>xt:component</tt>, <tt>xt:repeat</tt> or any XHTML element that can have child elements</span>
       </p>
     </div>
-    <p>The <strong>xt:use element</strong> includes a component inside the document at it's position. It may include a specific component type, a builtin component type, or a list of component types. In that latter case the <tt>xt:use</tt> element will generate a selection menu allowing the user to choose at runtime the component type to include. It can only carry on a text content, which is meaningful  only in the case the <tt>xt:use</tt> includes a primitive component type (it is ignored otherwise). In that case it is up to the primitive editor to interpret this content, which is usually displayed as the default content when the user has not input data yet, or no data has been loaded.</p>
-    <p>It is a good practice to set a self-explanatory default content that hints the user about the expected content. You may notice that the content of the <tt>xt:use</tt> element differs from the original XTiger specification, that used to save the document data with the document.</p>
-    <p>The <tt>xt:use</tt> element supports an experimental <tt>flow</tt> attribute which can be used to slice the XML content model into different parts which may be discontinued in regards to the template document order. This is useful for instance to split the XML content model in two parts in case of internationalization: one part may be dependant of the language, while the other part may be independent. In that case, the language dependant parts of the template can be defined in the template as usual, while the independent parts can be defined inside a separate flow. The API to serialize the XML content of  a document template, which is  described in the developer's guide, allows to serialize all the XML content model into a single document, or to serialize the main XML content model and the different flows into different documents. This is useful to split the XML content and to store it in different databases or tables.</p>
+    <p>The <tt>xt:use</tt> element includes a component inside the document. It may include a <strong>single component type</strong>, a <strong>primitive component type</strong>, or a <strong>list of component types</strong>.</p>
+    <h3>The "xt:use" element with a single component type</h3>
+    <p>This is the case when the <tt>types</tt> attribute contains the name of a component type which is declared by an <tt>xt:component</tt> element of the same name in the <tt>xt:head</tt> section of the template document. That inclusion will be treated by generating the component type's content in place of the <tt>xt:use</tt> element.</p>
+    <p>The optional <tt>label</tt> attribute defines the name of the target XML element to generate in the target document. If it is not defined it is inherited by the context. The <tt>xt:use</tt> element in this role should have an empty content.</p>
+    <h3>The "xt:use" element with a single primitive component type</h3>
+    <p>This is the case when the <tt>types</tt> attribute contains the name of a builtin component type. The list of builtin component types is dependent of the plugins defined by the XTiger processor, however the specification require to implement at least a <tt>text</tt> and a <tt>select</tt> primitive editor plugins.</p>
+    <p>The optional <tt>label</tt> attribute defines the name of the target XML element to generate in the target document. If it is not defined it is inherited by the context. The content  of the <tt>xt:use</tt> element in this role is not defined per the specification. It should serve as a default content to initialize the primitive editor plugin. It is a good practice to set a self-explanatory default content that hints the user about the expected content</p>
+    <h3>The "xt:use" element with a list of component types</h3>
+    <p>This is the case when the <tt>types</tt> attribute contains a list of names of component types. For simplifying implementations, the list may be restricted to exclude any builtin component type.</p>
+    <p>The <tt>xt:use</tt> in this role generates a selection menu allowing the user to choose the component type to include at runtime. The current selection will define which component's content will replace the <tt>xt:use</tt> element. Unless using the <tt>xt:menu-marker</tt> to position the selection menu (see the explanations in the corresponding section), this menu is generated as a previous sibling of the current component's content.</p>
+    <p>The target content generated by this type of component inclusion is always enclosed inside an XML element baring the name of the current component selection. For instance, if the <tt>xt:head</tt> section define some <em>parag</em>, <em>list</em> and <em>figure</em> components :</p>
+    <pre>&lt;xt:use types="para list figure"/&gt;</pre>
+    <p>will generate one of the three :</p>
+    <pre>&lt;para&gt;...&lt;/para&gt; 
+or &lt;list&gt;...&lt;/list&gt;
+or &lt;figure&gt;...&lt;/figure&gt;</pre>
+    <p>target XML content. However it is possible to enclose the target XML content inside a parent XML element using a <tt>label</tt> attribute, as with the other cases. For instance :</p>
+    <pre>&lt;xt:use types="para list figure" label="definition"/&gt;</pre>
+    <p>will generate one of the three :</p>
+    <pre>&lt;definition&gt;&lt;para&gt;...&lt;/para&gt;&lt;/definition&gt;
+or &lt;defnition&gt;&lt;list&gt;...&lt;/list&gt;&lt;/defnition&gt;
+or &lt;defnition&gt;&lt;figure&gt;...&lt;/figure&gt;&lt;/defnition&gt;</pre>
+    <p>Finally if the <tt>label</tt> attribute contains a list of names instead of a single name, each name in the list will be matched with the corresponding name in the <tt>types</tt> list of names, and it will be used to generate the target XML element instead. Both lists must have the same size. For instance :</p>
+    <pre>&lt;xt:use types="para list figure" label="DefPara DefList DefFig"/&gt;</pre>
+    <p>will generate one of the three :</p>
+    <pre>&lt;DefPara&gt;...&lt;/DefPara&gt; 
+or &lt;DefList&gt;...&lt;/DefList&gt;
+or &lt;DefFig&gt;...&lt;/DefFig&gt;</pre>
+    <p>The <tt>xt:use</tt> element in this role should have an empty content.</p>
+    <p>The names that will appear in the selection menu will be either the component type names (e.g. above <em>para</em>, <em>list</em> or <em>figure</em>), the component names as defined per the <tt>label</tt> attribute if it is used to rename the target XML content tag names (e.g. above <em>DefPara</em>, <em>DefList</em>, <em>DefFig</em>), or the component name given by its <tt>i18n</tt> attribute if it has one. The i18n attribute supersedes any other choice.</p>
+    <h3>The optional <tt>"handle"</tt> attribute</h3>
+    <p>The <tt>xt:use</tt> element that includes a primitive component type may declare an optional <tt>handle</tt> attribute. This attribute is set to the name of a preferred XHTML element that should be used as a handle by the primitive editor plugin. This is mostly targeted at a text editing plugins that use a default  <tt>span</tt> handle, to change that for a block-level handle that may be preferrable with some filters.</p>
     <h3>Attributes</h3>
     <table>
       <thead>
@@ -209,11 +241,11 @@ in &lt;xt:use types="string" label="place"&gt;city&lt;/xt:use&gt;&lt;/p&gt;
           <td>types</td>
           <td>yes</td>
           <td>list of white space separated type names</td>
-          <td>lists the components which can be included at the position of the xt:use, if there are several names the XTX processor will generate a selection menu</td>
+          <td>lists the components which can be included at the position of the xt:use, if there are several names the XTiger processor will generate a selection menu</td>
         </tr>
         <tr>
           <td>label</td>
-          <td>no, only mandatory in conjunction with a flow attribute</td>
+          <td>no</td>
           <td>string</td>
           <td>mapping with a tag name in the XML content model</td>
         </tr>
@@ -224,16 +256,16 @@ in &lt;xt:use types="string" label="place"&gt;city&lt;/xt:use&gt;&lt;/p&gt;
           <td>if this attribute is present, the xt:use content is optional, when its value is "set" the content is set by default whereas it is not set if its value is "unset" NOTE: actually option is interpreted if and only if <tt>types</tt> integrates a single primitive component type</td>
         </tr>
         <tr>
+          <td>handle</td>
+          <td>no</td>
+          <td>XHTML tag name</td>
+          <td>changes the default handle created by a primitive editor plugin to a specific one; note that this is plugin implementation dependent</td>
+        </tr>
+        <tr>
           <td>param</td>
           <td>no</td>
           <td>list of semi-colon separated <tt>key=value</tt> pairs</td>
-          <td>declares some options which can be set for the primitive editor that will manage the component included with this xt:use; this attribute is only taken into account 1) if the xt:use contains only one type name in the types attribute and ii) if this is the type name of a registered primitive editor</td>
-        </tr>
-        <tr>
-          <td>flow</td>
-          <td>no</td>
-          <td>string</td>
-          <td>places the XML content model that starts at the <tt>xt:use</tt> element inside a separate flow named with this attribute; it is possible to create a discontinued flow that embraces several <tt>xt:use</tt> elements by using several times the same name in the flow attribute; however in that case the <tt>flow</tt> attributes with the same name can not be nested</td>
+          <td>declares some options which can be set for the primitive editor that will manage the component included with this xt:use; this attribute is only taken into account 1) if the <tt>xt:use</tt> contains only one type name in the types attribute and ii) if this is the type name of a registered primitive editor</td>
         </tr>
       </tbody>
     </table>
@@ -261,74 +293,8 @@ in &lt;<em>xt:use types="string"</em><strong>label="place"</strong>&gt;city&lt;/
     &lt;place/&gt;
   &lt;/birth&gt;
 &lt;/presentation&gt;</pre>
-    <h3>Example with a separate flow</h3>
-    <p>The following template is a very basic meeting decision report with a flow participants that contains the list of present and excused people by their name. As these list of names do not need to be translated into different languages, they have been put in a separate flow to allow developers to save it to a different place than the other meeting data in the template which could be translated to different languages and then be stored in different places. This example shows that a flow can be splitted into different parts which are intertwined with the main document. The experimental flow mechanism offers a very basic and low level mechanism to decouple the organization of data into the database from the organization of data in to a  document template. </p>
-    <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
-&lt;head&gt;
- &lt;xt:head label="minutes"&gt;
- &lt;xt:component name="listOfParticipants"&gt;
- &lt;ul&gt;
- &lt;xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="name" &gt;
-    &lt;li&gt;&lt;xt:use types="text" label="name"&gt;participant name&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
- &lt;/xt:repeat&gt;
- &lt;/ul&gt;
- &lt;/xt:component&gt;
- &lt;/xt:head&gt;
-&lt;/head&gt;
-&lt;body&gt;
- &lt;h1&gt;&lt;xt:use types="text" label="title"&gt;Meeting title&lt;/xt:use&gt;&lt;/h1&gt;
- &lt;blockote&gt;
- &lt;xt:use types="text" label="goal"&gt;Goal&lt;/xt:use&gt;
- &lt;/blockote&gt; 
- &lt;h2&gt;Present&lt;/h2&gt;
- &lt;xt:use types="listOfParticipants" label="present" flow="participants"/&gt; 
- &lt;h2&gt;Decisions&lt;/h2&gt;
- &lt;ul&gt;
- &lt;xt:repeat minOccurs="0" maxOccurs="*" label="decisions"&gt;
-    &lt;li&gt;&lt;xt:use types="text" label="decision"&gt;decision&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
- &lt;/xt:repeat&gt;
- &lt;/ul&gt;
- &lt;h2&gt;Excused&lt;/h2&gt;
- &lt;xt:use types="listOfParticipants" label="excused" flow="participants"/&gt; 
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-    <p>If serialized as a single document, the template would generated the following type of XML content that is called a tide; the first children of the <tt>xt:tide</tt> root element is the XML content of the main document (i.e. the main flow), while each of the other first level children represents a different flow:</p>
-    <pre>&lt;xt:tide xmlns:xt="http://ns.inria.org/xtiger"&gt;
- &lt;minutes&gt;
-   &lt;title&gt;Library decoration&lt;/title&gt;
-   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
-   &lt;decisions&gt;
-     &lt;decision&gt;bring a ficus&lt;/decision&gt;
-   &lt;/decisions&gt;
- &lt;/minutes&gt;
- &lt;participants&gt;
-   &lt;present&gt;
-     &lt;name&gt;Alice&lt;/name&gt;
-     &lt;name&gt;Bob&lt;/name&gt;
-   &lt;/present&gt;
-   &lt;excused&gt;
-     &lt;name&gt;Charles&lt;/name&gt;
-   &lt;/excused&gt;
- &lt;/participants&gt;
-&lt;/xt:tide&gt; </pre>
-    <p>You may have notice that the previous example is not completely internationalized, as some text inside the template itself, which is not part of the XML content model, such as the &lt;h2&gt; sub-title Present, should also be internationalized. However this could be done using different templating mechanisms that depend of the server-side framework used to serve the templates themselves.</p>
-    <p>The same content that would be generated from the same template without the separate participants flow attributes would generate the following XML content:</p>
-    <pre>&lt;minutes&gt;
- &lt;title&gt;Library decoration&lt;/title&gt;
-   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
-   &lt;present&gt;
-     &lt;name&gt;Alice&lt;/name&gt;
-     &lt;name&gt;Bob&lt;/name&gt;
-   &lt;/present&gt;
-   &lt;decisions&gt;
-     &lt;decision&gt;bring a ficus&lt;/decision&gt;
-   &lt;/decisions&gt;
-   &lt;excused&gt;
-     &lt;name&gt;Charles&lt;/name&gt;
-   &lt;/excused&gt;
-&lt;/minutes&gt;</pre>
-    <h2 id="attribute">The <tt>xt:attribute</tt> element</h2>
+    <p>You may have notice that the previous example is not completely internationalized, as some text inside the template itself, which is not part of the XML content model, such as the &lt;h2&gt; sub-title <em>Presentation of</em> , should also be internationalized. This is out of the scope of this specifciation. This can be chieved using different templating mechanisms that depend of the server-side framework used to serve the templates themselves.</p>
+    <h2 id="attribute">The <tt>"xt:attribute"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -339,7 +305,7 @@ in &lt;<em>xt:use types="string"</em><strong>label="place"</strong>&gt;city&lt;/
         <span>descendant of an <tt>xt:component</tt> or an <tt>xt:repeat</tt> element</span>
       </p>
     </div>
-    <p>The <strong>xt:attribute element</strong> includes a built-in component type that will be mapped to an XML attribute in the XML content model of the document. This XML attribute will be attached to the current XML element in scope when generating the XML data. The component type name is given in the <tt>types</tt> attribute, which although in a plural form must contain only one component type name.</p>
+    <p>The <tt>xt:attribute</tt> element includes a built-in component type that will be mapped to an XML attribute in the XML content model of the document. This XML attribute will be attached to the current XML element in scope when generating the XML data. The component type name is given in the <tt>types</tt> attribute, which although in a plural form must contain only one component type name.</p>
     <h3>Attributes</h3>
     <table>
       <thead>
@@ -355,19 +321,13 @@ in &lt;<em>xt:use types="string"</em><strong>label="place"</strong>&gt;city&lt;/
           <td>types</td>
           <td>yes</td>
           <td>a primitive component type</td>
-          <td>sets the built-in editor that will be used to edit the attribute; this can be only a primitive component type editor (i.e. currently "string", "text" and "select")</td>
-        </tr>
-        <tr>
-          <td><span>type</span></td>
-          <td/>
-          <td/>
-          <td>deprecated name for types</td>
+          <td>sets the built-in editor that will be used to edit the attribute; this is restricted to a primitive component type editor (e.g. <tt>text</tt> or <tt>select</tt>)</td>
         </tr>
         <tr>
           <td>name</td>
           <td>yes</td>
           <td>string</td>
-          <td>mapping withn an attribute name in the XML content model</td>
+          <td>mapping withn an attribute name in the target XML content model</td>
         </tr>
         <tr>
           <td>option</td>
@@ -379,19 +339,31 @@ in &lt;<em>xt:use types="string"</em><strong>label="place"</strong>&gt;city&lt;/
           <td>values</td>
           <td>no</td>
           <td>optional white space separated list of the values allowed for the attribute</td>
-          <td>defines allowed values for the attribute, this only works if the primitive component type manages a list of choices (i.e. at that moment this is the case only with the <tt>select</tt> primitive component type)</td>
+          <td>defines a list of allowed values for the attribute, <strong>this only applies with a primitive component type that manages a list of choices</strong> (i.e. at that moment this is the case only with the <tt>select</tt> primitive component type)</td>
         </tr>
         <tr>
           <td>default</td>
           <td>yes</td>
           <td>string</td>
-          <td>defines the value by default of the <tt>xt:attribute</tt>, if the attribute <tt>values</tt> is defined the default value must be part of the list</td>
+          <td>if the attribute value is defined by a list of <tt>values</tt>, then the default one must be defined by this attribute</td>
         </tr>
         <tr>
           <td>i18n</td>
           <td>no</td>
           <td>optional white space separated list of the labels to display for each value in the <tt>values</tt> attribute</td>
-          <td>displays a different label for each option in the menu that presents the allowed values to the user; this is useful only in conjunction with a primitive component type that manages a list of choices (see the remark above about <tt>values</tt>); if present, the order of the labels in this list must be the same as the order of the corresponding values</td>
+          <td>if the attribute value is defined by a list of <tt>values</tt>, then it gives a list of corresponding labels for each value in the menu that presents the allowed values to the user; if present, the order of the labels in this list must be the same as the order of the corresponding <tt>values</tt></td>
+        </tr>
+        <tr>
+          <td>handle</td>
+          <td>no</td>
+          <td>XHTML tag name</td>
+          <td>changes the default handle created by a primitive editor plugin to a specific one; note that this is plugin implementation dependent (same as for <tt>xt:use</tt>)</td>
+        </tr>
+        <tr>
+          <td>param</td>
+          <td>no</td>
+          <td>list of semi-colon separated <tt>key=value</tt> pairs</td>
+          <td>declares some primitive editor's dependent options</td>
         </tr>
       </tbody>
     </table>
@@ -400,8 +372,8 @@ in &lt;<em>xt:use types="string"</em><strong>label="place"</strong>&gt;city&lt;/
 &lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
  &lt;xt:head <strong>label="book"</strong>&gt;
  &lt;xt:component name="author"&gt;
-	&lt;p&gt;My name is &lt;xt:use types="string" <strong>label="name"</strong>&gt;your name&lt;xt:use&gt;, 
-but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</strong> default="your nickname"&gt;&lt;/p&gt;
+	&lt;p&gt;My name is &lt;xt:use types="text" <strong>label="name"</strong>&gt;your name&lt;xt:use&gt;, 
+but you can call me &lt;xt:attribute types="text" <strong>name="nickname"</strong>&gt;your nickname&lt;/xt:attribute&gt;&lt;/p&gt;
  &lt;/xt:component&gt; 
  &lt;/xt:head&gt; 
 &lt;/head&gt;
@@ -415,7 +387,7 @@ but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</str
     &lt;name&gt;your name&lt;/name&gt;
   &lt;/author&gt;
 &lt;/book</pre>
-    <h2 id="marker">The <tt>xt:menu-marker</tt> element</h2>
+    <h2 id="marker">The <tt>"xt:menu-marker"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -426,7 +398,31 @@ but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</str
         <span>descendant of an <tt>xt:component</tt> or an <tt>xt:repeat</tt> element</span>
       </p>
     </div>
-    <p>The <strong>xt:menu-marker element</strong> must be placed inside the scope of an xt:repeat element (either as a direct descendant or as a descendant after one or more type inclusions through xt:use elements). It allows to control the insertion point of the Add / Remove buttons generated by the XTX processor when transforming the repetition element.</p>
+    <h3>Usage for controlling an "xt:repeat" repetition menu insertion point</h3>
+    <p>The <tt>xt:menu-marker</tt> element must be placed inside the scope of an <tt>xt:repeat</tt> element (either as a direct descendant or as a descendant after one or more type inclusions through <tt>xt:use</tt> elements). It controls the insertion point of the Add / Remove buttons generated by the XTiger processor when transforming the <tt>xt:repeat</tt> element. For instance in the following <em>list</em> component :</p>
+    <pre>&lt;xt:component name="list"&gt;
+  &lt;ul&gt;
+    &lt;xt:repeat minOccurs="1" maxOccurs="*" label="list"/&gt;
+       &lt;li&gt;click to enter an item <strong>&lt;xt:menu-marker/&gt;</strong>&lt;/li&gt;
+    &lt;/xt:repeat&gt;
+  &lt;/ul&gt;
+&lt;/xt:component&gt;</pre>
+    <p>The repetition Add / Remove buttons must be generated as the last child of each <em>li</em> element, whereas without any <tt>xt:menu-marker</tt> set, they would be generated as first child of the repeated fragments, which means just before each <em>li</em> element.</p>
+    <h3>Usage for controlling an "xt:use" selection menu insertion point</h3>
+    <p>The <tt>xt:menu-marker</tt> element can also be used to control the insertion point of the selection menu generated by an <tt>xt:use</tt> element contained in the same <tt>xt:component</tt>. For that purpose the <tt>xt:use</tt> element must declare in a <tt>param</tt> attribute a <tt>name</tt> parameter that serves as an identifier. That identifier must also be set as the value of the <tt>target</tt> attribute of the <tt>xt:menu</tt> marker.</p>
+    <p>For instance the following component contains two <tt>xt:menu-marker</tt> elements. The one without a <tt>target</tt> attribute will be used to insert the Add / Remove buttons of it's enclosing <tt>xt:repeat</tt> element as described above. The one with a <tt>target</tt> attribute will be used to insert the selection menu for the <tt>xt:use</tt> with a choice of multiple component types :</p>
+    <pre>&lt;xt:component name="section"&gt;
+  &lt;xt:repeat minOccurs="1" maxOccurs="*" label="section"&gt;
+    &lt;div class="row"&gt;
+      &lt;div class="menu"&gt;
+        &lt;xt:menu-marker <strong>target="t_select"</strong>/&gt;&lt;br/&gt;
+        &lt;xt:menu-marker/&gt;
+      &lt;/div&gt;
+      &lt;xt:use types="parag list title1 title2" <strong>param="name=t_select"</strong>/&gt;
+    &lt;/div&gt;
+  &lt;/xt:repeat&gt;
+&lt;/xt:component&gt;</pre>
+    <p>Together with a proper choice of class names and CSS rules, this is a convenient way to group repetition and selection menus, and to control the position of those menus to improve user interaction.</p>
     <h3>Attributes</h3>
     <table>
       <thead>
@@ -439,14 +435,20 @@ but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</str
       </thead>
       <tbody>
         <tr>
+          <td>size</td>
+          <td>no</td>
+          <td>an integer (e.g. 20, default to <strong>16</strong>)</td>
+          <td>optional size in pixels for the buttons; it's interpretation is implementation dependent</td>
+        </tr>
+        <tr>
           <td>target</td>
           <td>no</td>
-          <td>a string</td>
-          <td>to be done...</td>
+          <td>name of a named <tt>xt:use</tt></td>
+          <td>the <tt>xt:menu-marker</tt> will be used to display the selection menu for a named <tt>xt:use</tt> element declared within the same <tt>xt:component</tt></td>
         </tr>
       </tbody>
     </table>
-    <h2 id="repeat">The <tt>xt:repeat</tt> element</h2>
+    <h2 id="repeat">The <tt>"xt:repeat"</tt> element</h2>
     <div class="containBox">
       <p>
         <span>Contains</span>
@@ -457,8 +459,8 @@ but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</str
         <span>any XHTML element that can have child elements, xt:component, or another xt:repeat</span>
       </p>
     </div>
-    <p>The <strong>xt:repeat element</strong> defines a document fragment that can be repeated zero or more times. A zero time repetition means that the fragment is optional and is not set. The xt:repeat element will generate some interaction element (a pari of Add / Remove buttons) that will be inserted at the place of the first xt:menu-marker element inside the fragment, or inserted at the end of the fragment if it doesn't contain any xt:menu-marker element.</p>
-    <p>The xt:repeat element can be mapped to a  tag name in the XML content model through a label attribute, in a way similar to the xt:use element. If it is not associated with a tag name, it MUST declare in a pseudoLabel attribute the name of the first  tag name that is generated in the XML content model of its fragment. This is mandatory to allow the XTX processor to correctly load XML data into the template.</p>
+    <p>The <tt>xt:repeat</tt> element defines a document fragment that can be repeated zero or more times. A zero time repetition means that the fragment is optional and is not set. The <tt>xt:repeat</tt> element will generate some interaction element (a pair of Add / Remove buttons) that will be inserted in place of the first <tt>xt:menu-marker</tt> element inside the fragment, or inserted at the end of the fragment if it doesn't contain any.</p>
+    <p>The <tt>xt:repeat</tt> element can be mapped to a  tag name in the XML content model through a <tt>label</tt> attribute, in a way similar to the <tt>xt:use</tt> element. If it is not associated with a tag name, it must declare in a <tt>pseudoLabel</tt> attribute the list of the names of the first  tag names that may appear first in the target XML content model. This is mandatory to allow the XTiger processor to correctly load XML data into the template.</p>
     <h3>Attributes</h3>
     <table>
       <thead>
@@ -492,7 +494,7 @@ but you can call me &lt;xt:attribute types="string" <strong>name="nickname"</str
           <td>pseudoLabel</td>
           <td>yes (unless <em>label</em> is defined)</td>
           <td>string</td>
-          <td>in case the label is not defined for the entire repeated component, the pseudoLabel must give the name of the first XML tag name which is repeated in the XML content model</td>
+          <td>in case <tt>label</tt> is not defined on the <tt>xt:repeat</tt>, it must contains a list of the names of the first XML tag names that may appear in first position in the repeated target XML content model</td>
         </tr>
       </tbody>
     </table>
@@ -520,41 +522,7 @@ costs &lt;xt:attribute types="text" <strong>name="price"</strong> default="00"/&
  &lt;dish price="30"&gt;Noodles and salmon&lt;/dish&gt;
  &lt;dish price="15"&gt;Rice and pork&lt;/dish&gt;
 &lt;/menucard&gt;</pre>
-    <h2 id="string">The <tt>string</tt> primitive component type</h2>
-    <div class="containBox">
-      <p>
-        <span>Synopsis</span>
-      </p>
-      <pre>&lt;xt:use types="string" label="nickname" param="lookahead=4"&gt;your nickname&lt;/xt:use&gt;</pre>
-      <pre>&lt;xt:attribute types="string" name="birthdate" default="year" param="lookahead=0"&gt;
-&lt;/xt:attribute&gt;</pre>
-    </div>
-    <p><em>DEPRECATED</em> : this primitive editor exists for historical reasons and for debugging. It is recommended to use the text primitive component type instead, since it provides advanced options to control its appearance and behavior and uses less memory (it does not generate an input field for each editable content).</p>
-    <p>The <strong>string primitive component type</strong> is associated with a string editor that generates a span and an input field in the document. The span displays the current content of the editor. Each time the user clicks on it, it is hidden and the input field is shown instead to edit the content. When the user validates the entry with Return, the input field is hidden and the span is shown again with the new content. The user can cancel a current entry by pressing the Escape key.</p>
-    <p>The string editor does not provide any advanced option such as automatic resizing as user's input data. The only supported option is the lookahead option that sets a number of extra characters (spaces) that will be added at the end of the content before displaying the input field for a new entry.</p>
-    <p>The string editor supports the <tt>option</tt> attribute of the <tt>xt:use</tt> or <tt>xt:attribute</tt> element that includes it. If this attribute is present it generates a checkbox from which the user can include its content into the document or not.</p>
-    <p>The content of this editor is initialized to the text content of the <tt>xt:use</tt> element, or to the value of the default attribute of the <tt>xt:attribute</tt> element.</p>
-    <p>This primitive component type exists for historical reasons and for debugging. It is recommended to use the text primitive component type instead, since it provides advanced options to control its appearance and behavior and uses less memory (it does not generate an input field for each editable content).</p>
-    <h3>Parameters (passed through the <tt>param</tt> attribute on xt:use)</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>Parameter</th>
-          <th>Values</th>
-          <th>Default</th>
-          <th>Description</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>lookahead</td>
-          <td>number</td>
-          <td>2</td>
-          <td>defines how many empty characters to add at the end of the edit field when it is opened, for instance if a field contains 'hello', displaying it with a lookahead of 5 will display 'hello     ' (5 spaces after)</td>
-        </tr>
-      </tbody>
-    </table>
-    <h2 id="text">The <tt>text</tt> primitive component type</h2>
+    <h2 id="text">The <tt>"text"</tt> primitive component type</h2>
     <div class="containBox">
       <p>
         <span>Synopsis</span>
@@ -564,11 +532,11 @@ Write a new paragraph here.&lt;/xt:use&gt;</pre>
       <pre>&lt;xt:attribute types="text" name="birthdate" default="year" 
 param="type=input;layout=placed;expansion=none" option="set"/&gt;</pre>
     </div>
-    <p>The <strong>text primitive component type</strong> is associated with a text editor that generates a span in the document and either an input field or a textarea field (for multilines entry) in the document. The difference with the string editor is that the input or the textarea fields are shared between all the text primitive editors which are created inside the document.</p>
+    <p>The <tt>text</tt> primitive component type is associated with a text editor that generates a span in the document and either an input field or a textarea field (for multilines entry) in the document. The difference with the string editor is that the input or the textarea fields are shared between all the text primitive editors which are created inside the document.</p>
     <p>The text editor supports two types of input or textarea fields with different layout. The float layout dynamically positions the input or the textarea on top of the content to edit when the user clicks on it (using CSS absolute positioning). The placed layout dynamically replaces the content to edit, which is stored in a span, by the input or the textarea field when the user clicks on the content. Once the editing is finished, a float field is hidden revealing the content span which is updated with the last entry; similarly, a placed field is replaced back with the content span.</p>
     <p>The text editor supports the <tt>option</tt> attribute of the <tt>xt:use</tt> or <tt>xt:attribute</tt> element that includes it. If this attribute is present it generates a checkbox from which the user can include its content into the document or not.</p>
     <p>The content of this editor is initialized to the text content of the <tt>xt:use</tt> element, or to the value of the <tt>default</tt> attribute of the <tt>xt:attribute</tt> element.</p>
-    <p>The text editor is controlled by passing a list of option declarations into the <tt>param</tt> attribute on the XTX element that includes it into the document. For instance the example in the synopsis creates a text editor with a shared textarea and a float layout.</p>
+    <p>The text editor is controlled by passing a list of option declarations into the <tt>param</tt> attribute on the XTiger element that includes it into the document. For instance the example in the synopsis creates a text editor with a shared textarea and a float layout.</p>
     <h3>Parameters (passed through the <tt>param</tt> attribute on xt:use)</h3>
     <table>
       <thead>
@@ -612,7 +580,7 @@ param="type=input;layout=placed;expansion=none" option="set"/&gt;</pre>
         <tr>
           <td>class</td>
           <td>string</td>
-          <td>the value of the class attribute will be set as the class attribute of the span element that displays the editor content; it will also be dynamically added to the class attribute of the input field or textarea field when editing; this allows to style the editor on a per-instance basis with CSS</td>
+          <td>a class name to set on the handle (e.g. span) that displays the editor content; it must also be set on the entry field when editing</td>
         </tr>
         <tr>
           <td>expansion</td>
@@ -624,17 +592,11 @@ param="type=input;layout=placed;expansion=none" option="set"/&gt;</pre>
           <td>'none'</td>
           <td>the edit field has a fixed shape/length</td>
         </tr>
-        <tr>
-          <td>clickthrough</td>
-          <td>boolean (true)</td>
-          <td>when switching to edit mode the cursor will be placed at the character under the mouse, currently this attribute has no effects on IE browser (note: let me know if you know how to convert mouse position into character
-    selection position on IE) note: implementation still in progress</td>
-        </tr>
       </tbody>
     </table>
-    <h3>Optional <tt>handle</tt> attribute</h3>
-    <p>When a <tt>xt:use</tt> or a <tt>xt:attribute</tt> includes a  <tt>text</tt> component type, it may declare an optional <tt>handle</tt> attribute. This attribute must be set to the name of an XHTML element that will be used as a handle instead of the default &lt;span&gt; handle. This is mostly used with a text derivated editors built with the filtering mechanism described in the developer's guide and that may require a block level handle instead of an inline level handle.</p>
-    <h2 id="select">The <tt>select</tt> primitive component type</h2>
+    <h3>Recommended "clickthrough" behavior</h3>
+    <p>The <tt>text</tt> plugin should position the cursor at the character under the mouse when switching to edit mode.</p>
+    <h2 id="select">The <tt>"select"</tt> primitive component type</h2>
     <div class="containBox">
       <p>
         <span>Synopsis</span>
@@ -643,18 +605,24 @@ param="type=input;layout=placed;expansion=none" option="set"/&gt;</pre>
 values="France Italy Switzerland"/&gt;</pre>
       <pre>&lt;xt:attribute types="select" label="currency" default="EUR" 
 values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
+      <pre>or alternatively :
+&lt;xt:use types="select" label="currency" 
+values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"&gt;EUR&lt;/xt:use&gt;</pre>
     </div>
-    <p>The <strong>select primitive component type</strong> is associated with a popup menu editor that generates a span in the document that contains a current selection. The popup menu is displayed each time the user clicks on the span and it updates its value to the selected value.</p>
-    <p>The select primitive component type MUST be associated with an xt:attribute element because it uses its values attribute to build the options of the popup menu, and by default it selects the option defined in the default attribute.</p>
-    <p>The select editor supports the <tt>option</tt> attribute of the <tt>xt:attribute</tt> element. If this attribute is present it generates a checkbox from which the user can include its content into the document or not.</p>
-    <p>The select editor supports the <tt>i18n</tt> attribute of the <tt>xt:attribute</tt> element. If this attribute is present, the labels displayed in the popup menu are taken from the <tt>i18n</tt> list instead of the values list, so both  lists must have a one to one matching. This attribute does not change the generated XML content model which is still conditioned by the values attribute.</p>
-    <p>This editor does not currently manage any parameter. </p>
+    <p>The <tt>select</tt> primitive component type is associated with a popup menu editor that generates a span in the document that contains a current selection. The popup menu is displayed each time the user clicks on the span and it updates its value to the selected value.</p>
+    <p>The select editor supports the <tt>option</tt> attribute of its host element. If this attribute is present it generates a checkbox from which the user can include its content into the document or not.</p>
+    <p>The <tt>select</tt> primitive component is mainly associated with an <tt>xt:attribute</tt> element because it uses its <tt>values</tt> attribute (and optionaly its <tt>i18n</tt> attribute) to build the options of the popup menu, and it gets the option selected by default from its <tt>default</tt> attribute. However it is tolerated than an implementation supports the <tt>select</tt> plugin with an <tt>xt:use</tt> element. In that case it will extend its definition to support a <tt>values</tt> and an <tt>i18n</tt> attributes, however the selected option by default will be declared in the text content of the <tt>xt:use</tt>.</p>
+    <p>This editor does not currently manage any parameter in the <tt>param</tt> attribute.</p>
     <h2 id="processing">XTiger XML Processing Model</h2>
-    <p>The AXEL (Adaptable XML Editing Library) XTX processor is implemented as a Javascript client-side library which can be run inside a browser. You have the choice to import this Javascript library directly into the template file, using script tags, to make it an auto-editable template. As an alternative you can use an editing application. Such applications can be built with the library. They should allow to load templates and to edit documents with them. They should allow to load XML data into the documents and to save back the document to XML data. </p>
-    <p>The Javascript XTX processor takes as input an XTX template document. It loads the template document into the browser memory and then it transforms it, removing the XTX elements and generating adequate XHTML content to turn the document into an interactive editable document. During this transformation the processor creates some Javascript objects to control user's input and the dynamic display of user interaction elements (e.g. buttons, popup menus, etc.).</p>
-    <p><em>To be completed</em></p>
+    <p>The AXEL (Adaptable XML Editing Library) XTiger processor is implemented as a Javascript client-side library. You have the choice to import this Javascript library directly into the template file, using script tags, to make it an <em>auto-editable template</em>. As an alternative you can use an editing application. Such applications can be built with the library. They should allow to load templates and to edit documents with them. They should allow to load XML data into the documents and to save back the document to XML data. Editing applications may load the template to transform inside an <tt>iframe</tt>, or they can use an XHR request and transform the template inside a target <tt>div</tt> element. This is explained in a tutorial coming with the library.</p>
+    <p>The Javascript processor takes as input a template document. It's invocation should start by a rendering process to generate the editor. Then it should expose, using an API, a generation process, to linearize the current editor's content into XML, and optionally a loading process, to replace current editor's content with external XML data.</p>
+    <div class="illustration">
+      <img src="images/processing.png"/>
+      <p>AXEL processing model</p>
+    </div>
+    <p>The rendering process should load the template document into the browser memory and then transforms it, removing the XTiger elements and generating adequate XHTML content to turn the document into an interactive editable document. During this transformation the processor creates some Javascript objects to control user's input and the dynamic display of user interaction elements (e.g. buttons, popup menus, etc.).</p>
     <h2 id="styling">Styling XTiger XML templates</h2>
-    <p>The Javascript XTX processor generates some CSS attribute class attributes while transforming a template document. It then uses CSS rules to style these elements. Most of the time as a document template author you will use the standard <tt>axel.css</tt> file which is distributed with AXEL (path: <tt>axel/axel.css</tt>). But you may also redefine them or override them using an <tt>!important</tt> CSS rule.These CSS attributes are described in the table below.</p>
+    <p>The AXEL XTiger processor engine generates some pre-defined CSS class names while transforming a template document. These are used to style the generated editing application. Most of the time, as a document template author, you will use the standard <tt>axel.css</tt> file which is distributed with AXEL (path: <tt>axel/axel.css</tt>). But you may also redefine some of these rules or override them using an <tt>!important</tt> CSS instruction.These CSS class names are described in the table below.</p>
     <p>The most interesting class name is <tt>axel-core-editable</tt> which is set on the handle of primitive editors. It can be used for instance to improve feedback about the editable fields by using <tt>:hover</tt> pseudo selectors.</p>
     <p>For convenience, the CSS rules are defined in two different files in the AXEL source code distribution, these two files are concatenated to form the <tt>axel/css</tt> file when you build the library from source:</p>
     <ul>
@@ -723,7 +691,7 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
         </tr>
       </tbody>
     </table>
-    <h2 id="summary">Summary tables of supported attributes and parameters</h2>
+    <h2 id="summary">Summary tables</h2>
     <h3>Attributes per component types for use with <tt>xt:use</tt> and <tt>xt:attribute</tt></h3>
     <table>
       <thead>
@@ -732,37 +700,15 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
           <th>Attributes (bold if mandatory)</th>
           <th>Values for ''types''</th>
           <th>''option'' attribute</th>
+          <th>"handle" attribute</th>
         </tr>
       </thead>
       <tbody>
         <tr>
           <td><tt>xt:use</tt></td>
-          <td><strong>types</strong>, label, param, flow (only if label too)</td>
-          <td>string</td>
-          <td>supported</td>
-        </tr>
-        <tr>
-          <td>-</td>
-          <td>-</td>
+          <td><strong>types</strong>, label, option, handle, param</td>
           <td>text</td>
           <td>supported</td>
-        </tr>
-        <tr>
-          <td>-</td>
-          <td>-</td>
-          <td>list of component types</td>
-          <td>no</td>
-        </tr>
-        <tr>
-          <td><tt>xt:attribute</tt></td>
-          <td><strong>types</strong>, <strong>name</strong>, <strong>default</strong>, values, i18n (only if types="select")</td>
-          <td>string</td>
-          <td>supported</td>
-        </tr>
-        <tr>
-          <td>-</td>
-          <td>-</td>
-          <td>text</td>
           <td>supported</td>
         </tr>
         <tr>
@@ -770,6 +716,35 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
           <td>-</td>
           <td>select</td>
           <td>supported</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td>-</td>
+          <td>single component type defined in the <tt>xt:head</tt> section</td>
+          <td>no (use a <tt>xt:repeat</tt> with maxOccurs="1")</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td>-</td>
+          <td>list of component types</td>
+          <td>(use a <tt>xt:repeat</tt> with maxOccurs="1")</td>
+          <td>no</td>
+        </tr>
+        <tr>
+          <td><tt>xt:attribute</tt></td>
+          <td><strong>types</strong>, <strong>name</strong>, option, handle, param, <strong>default</strong>, values, i18n (NOTE: the last 3 are only used with types set to select)</td>
+          <td>text</td>
+          <td>supported</td>
+          <td>supported</td>
+        </tr>
+        <tr>
+          <td>-</td>
+          <td>-</td>
+          <td>select</td>
+          <td>supported</td>
+          <td>no</td>
         </tr>
       </tbody>
     </table>
@@ -785,12 +760,6 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
       </thead>
       <tbody>
         <tr>
-          <td>string</td>
-          <td><tt>xt:use</tt>, <tt>xt:attribute</tt></td>
-          <td>lookahead</td>
-          <td>integer (2)</td>
-        </tr>
-        <tr>
           <td>text</td>
           <td><tt>xt:use</tt>, <tt>xt:attribute</tt></td>
           <td>type</td>
@@ -800,7 +769,7 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
           <td>-</td>
           <td>-</td>
           <td>shape</td>
-          <td>parent, self (self)</td>
+          <td>parent<em>[-NBpx]</em>, self (self)</td>
         </tr>
         <tr>
           <td>-</td>
@@ -828,5 +797,94 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"/&gt;</pre>
         </tr>
       </tbody>
     </table>
+    <h2 id="deprecated">Deprecated features</h2>
+    <h3>The "string" primitive component type</h3>
+    <p>The "string" primitive editor existed for historical reasons. You must use the "text" primitive component type instead, since it provides advanced options to control its appearance and behavior and uses less memory in the AXEL implementation (it does not generate an input field for each editable content).</p>
+    <h3>The "flow" attribute of the "xt:use" element</h3>
+    <p><em>This feature has been deprecated to simplify XTiger implementations, and because it can be replaced with a server-side composite-document framework such as a XAL</em> (<a href="http://media.epfl.ch/docs/xal_spec.pdf">XML Aggregation Language</a>) <em>processor.</em></p>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Mandatory</th>
+          <th>Value</th>
+          <th>Edit</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>flow</td>
+          <td>no (but it makes <tt>label</tt> attribute mandatory)</td>
+          <td>string</td>
+          <td>places the XML content model that starts at the <tt>xt:use</tt> element inside a separate flow named with this attribute; it is possible to create a discontinued flow that embraces several <tt>xt:use</tt> elements by using several times the same name in the flow attribute; however in that case the <tt>flow</tt> attributes with the same name can not be nested</td>
+        </tr>
+      </tbody>
+    </table>
+    <p>The <tt>xt:use</tt> element supports an experimental <tt>flow</tt> attribute which can be used to slice the XML content model into different parts which may be discontinued in regards to the template document order. This is useful for instance to split the XML content model in two parts in case of internationalization: one part may be dependant of the language, while the other part may be independent. In that case, the language dependant parts of the template can be defined in the template as usual, while the independent parts can be defined inside a separate flow. The API to serialize the XML content of  a document template, which is  described in the developer's guide, allows to serialize all the XML content model into a single document, or to serialize the main XML content model and the different flows into different documents. This is useful to split the XML content and to store it in different databases or tables.</p>
+    <p>The following template is a very basic meeting decision report with a flow participants that contains the list of present and excused people by their name. As these list of names do not need to be translated into different languages, they have been put in a separate flow to allow developers to save it to a different place than the other meeting data in the template which could be translated to different languages and then be stored in different places. This example shows that a flow can be splitted into different parts which are intertwined with the main document. The experimental flow mechanism offers a very basic and low level mechanism to decouple the organization of data into the database from the organization of data in to a  document template. </p>
+    <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
+&lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
+&lt;head&gt;
+ &lt;xt:head label="minutes"&gt;
+ &lt;xt:component name="listOfParticipants"&gt;
+ &lt;ul&gt;
+ &lt;xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="name" &gt;
+    &lt;li&gt;&lt;xt:use types="text" label="name"&gt;participant name&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
+ &lt;/xt:repeat&gt;
+ &lt;/ul&gt;
+ &lt;/xt:component&gt;
+ &lt;/xt:head&gt;
+&lt;/head&gt;
+&lt;body&gt;
+ &lt;h1&gt;&lt;xt:use types="text" label="title"&gt;Meeting title&lt;/xt:use&gt;&lt;/h1&gt;
+ &lt;blockote&gt;
+ &lt;xt:use types="text" label="goal"&gt;Goal&lt;/xt:use&gt;
+ &lt;/blockote&gt; 
+ &lt;h2&gt;Present&lt;/h2&gt;
+ &lt;xt:use types="listOfParticipants" label="present" <strong>flow="participants"</strong>/&gt; 
+ &lt;h2&gt;Decisions&lt;/h2&gt;
+ &lt;ul&gt;
+ &lt;xt:repeat minOccurs="0" maxOccurs="*" label="decisions"&gt;
+    &lt;li&gt;&lt;xt:use types="text" label="decision"&gt;decision&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
+ &lt;/xt:repeat&gt;
+ &lt;/ul&gt;
+ &lt;h2&gt;Excused&lt;/h2&gt;
+ &lt;xt:use types="listOfParticipants" label="excused" <strong>flow="participants"</strong>/&gt; 
+&lt;/body&gt;
+&lt;/html&gt;</pre>
+    <p>If serialized as a single document, the template would generated the following type of XML content that is called a tide; the first children of the <tt>xt:tide</tt> root element is the XML content of the main document (i.e. the main flow), while each of the other first level children represents a different flow:</p>
+    <pre>&lt;xt:tide xmlns:xt="http://ns.inria.org/xtiger"&gt;
+ &lt;minutes&gt;
+   &lt;title&gt;Library decoration&lt;/title&gt;
+   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
+   &lt;decisions&gt;
+     &lt;decision&gt;bring a ficus&lt;/decision&gt;
+   &lt;/decisions&gt;
+ &lt;/minutes&gt;
+ &lt;participants&gt;
+   &lt;present&gt;
+     &lt;name&gt;Alice&lt;/name&gt;
+     &lt;name&gt;Bob&lt;/name&gt;
+   &lt;/present&gt;
+   &lt;excused&gt;
+     &lt;name&gt;Charles&lt;/name&gt;
+   &lt;/excused&gt;
+ &lt;/participants&gt;
+&lt;/xt:tide&gt; </pre>
+    <p>The same content that would be generated from the same template without the separate participants flow attributes would generate the following XML content:</p>
+    <pre>&lt;minutes&gt;
+ &lt;title&gt;Library decoration&lt;/title&gt;
+   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
+   &lt;present&gt;
+     &lt;name&gt;Alice&lt;/name&gt;
+     &lt;name&gt;Bob&lt;/name&gt;
+   &lt;/present&gt;
+   &lt;decisions&gt;
+     &lt;decision&gt;bring a ficus&lt;/decision&gt;
+   &lt;/decisions&gt;
+   &lt;excused&gt;
+     &lt;name&gt;Charles&lt;/name&gt;
+   &lt;/excused&gt;
+&lt;/minutes&gt;</pre>
   </body>
 </html>
