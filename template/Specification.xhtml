@@ -46,9 +46,11 @@
             <xt:use types="t_info_box" label="div"/>
           </xt:repeat>
 
-          <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="p ul h3 pre table">
+          <!-- FIXME: t_illustration cannot be in first position because optional info box div 
+                      define and use a class label="div.info", label="div.illustration" to dicriminate between them -->
+          <xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="p ul h3 pre table div">
             <div class="row">
-              <xt:use types="t_p t_ul t_subtitle t_code t_table" label="p ul h3 pre table" param="marker=row-menu"/>
+              <xt:use types="t_p t_ul t_subtitle t_code t_table t_illustration" label="p ul h3 pre table div" param="marker=row-menu"/>
             </div>
           </xt:repeat>
         </xt:repeat>
@@ -106,6 +108,15 @@
         <div class="row-content">
           <xt:use handle="pre" types="text"
           param="shape=parent-40px;type=textarea;layout=placed;enablelinebreak=true;filter=wiki;wiki_lang=html">Code</xt:use>
+        </div>
+      </xt:component>
+      
+      <xt:component name="t_illustration" i18n="figure">
+        <div class="illustration">
+          <!-- TBD: 'constant' plugin, 'hidden' filter -->
+          <span style="display: none"><xt:attribute types="text" name="class" value="illustration" param="filter=noedit" default="illustration"/></span>
+          <xt:use types="text" handle="div" param="type=input;layout=placed;class=image;filter=image;image_lang=html;base=../">enter image file name</xt:use>
+          <p><xt:use types="text" label="p">Caption</xt:use></p>
         </div>
       </xt:component>
 

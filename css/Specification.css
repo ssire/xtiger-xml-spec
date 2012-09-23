@@ -147,6 +147,20 @@ td:not(.menu) img, th img {
 td:hover img, th:hover img {
   display: inline;
 }
+div.illustration {
+  margin: 1em 0;
+  text-align: center;
+}
+div.illustration img {
+  max-width: 800px;
+}  
+div.illustration > p {
+  font-family: Arial;
+}
+div.illustration > p:before {
+  content: "Figure : ";
+}
+/* preview mode */
 body.preview span.row-menu {
   display: none;
 }
