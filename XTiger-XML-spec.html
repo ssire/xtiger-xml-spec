@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>XTiger XML Language Specification</h1>
-    <p>Updated: September 23, 2012; Editor: Stéphane Sire (<a href="http://www.oppidoc.fr">Oppidoc</a> and <a href="http://www.media.epfl.ch">Media</a> research group)</p>
+    <p>Updated: May 10, 2013; Editor: Stéphane Sire (<a href="http://www.oppidoc.fr">Oppidoc</a> and <a href="http://www.media.epfl.ch">Media</a> research group)</p>
     <h3>Notice</h3>
     <p>You should have a reasonable understanding of XHTML and XML to be able to read this document. You are strongly encouraged to try the primitive editors described in this document by opening some template documents inside the <a href="http://ssire.github.com/axel/editor/editor.xhtml">AXEL demonstration editor</a> which is available online. This specifiation itself is maintained in a GitHub <a href="https://github.com/ssire/xtiger-xml-spec">repository</a> using an XTiger template and an editor built with <a href="http://ssire.github.com/axel/">AXEL</a>. The latest version is published at <a href="http://ssire.github.com/xtiger-xml-spec/">http://ssire.github.com/xtiger-xml-spec/</a>.</p>
     <h3>Table of content</h3>
@@ -799,92 +799,8 @@ values="EUR USD CHF" i18n="Euro Dollars Franc-Suisse"&gt;EUR&lt;/xt:use&gt;</pre
     </table>
     <h2 id="deprecated">Deprecated features</h2>
     <h3>The "string" primitive component type</h3>
-    <p>The "string" primitive editor existed for historical reasons. You must use the "text" primitive component type instead, since it provides advanced options to control its appearance and behavior and uses less memory in the AXEL implementation (it does not generate an input field for each editable content).</p>
+    <p><em>The "string" primitive editor has been removed on May 10, 2013. It is superseded by the "text" primitive editor.</em></p>
     <h3>The "flow" attribute of the "xt:use" element</h3>
-    <p><em>This feature has been deprecated to simplify XTiger implementations, and because it can be replaced with a server-side composite-document framework such as a XAL</em> (<a href="http://media.epfl.ch/docs/xal_spec.pdf">XML Aggregation Language</a>) <em>processor.</em></p>
-    <table>
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Mandatory</th>
-          <th>Value</th>
-          <th>Edit</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>flow</td>
-          <td>no (but it makes <tt>label</tt> attribute mandatory)</td>
-          <td>string</td>
-          <td>places the XML content model that starts at the <tt>xt:use</tt> element inside a separate flow named with this attribute; it is possible to create a discontinued flow that embraces several <tt>xt:use</tt> elements by using several times the same name in the flow attribute; however in that case the <tt>flow</tt> attributes with the same name can not be nested</td>
-        </tr>
-      </tbody>
-    </table>
-    <p>The <tt>xt:use</tt> element supports an experimental <tt>flow</tt> attribute which can be used to slice the XML content model into different parts which may be discontinued in regards to the template document order. This is useful for instance to split the XML content model in two parts in case of internationalization: one part may be dependant of the language, while the other part may be independent. In that case, the language dependant parts of the template can be defined in the template as usual, while the independent parts can be defined inside a separate flow. The API to serialize the XML content of  a document template, which is  described in the developer's guide, allows to serialize all the XML content model into a single document, or to serialize the main XML content model and the different flows into different documents. This is useful to split the XML content and to store it in different databases or tables.</p>
-    <p>The following template is a very basic meeting decision report with a flow participants that contains the list of present and excused people by their name. As these list of names do not need to be translated into different languages, they have been put in a separate flow to allow developers to save it to a different place than the other meeting data in the template which could be translated to different languages and then be stored in different places. This example shows that a flow can be splitted into different parts which are intertwined with the main document. The experimental flow mechanism offers a very basic and low level mechanism to decouple the organization of data into the database from the organization of data in to a  document template. </p>
-    <pre>&lt;?xml version="1.0" encoding="UTF-8"?&gt; 
-&lt;html xmlns="http://www.w3.org/1999/xhtml" xmlns:xt="http://ns.inria.org/xtiger"&gt;
-&lt;head&gt;
- &lt;xt:head label="minutes"&gt;
- &lt;xt:component name="listOfParticipants"&gt;
- &lt;ul&gt;
- &lt;xt:repeat minOccurs="0" maxOccurs="*" pseudoLabel="name" &gt;
-    &lt;li&gt;&lt;xt:use types="text" label="name"&gt;participant name&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
- &lt;/xt:repeat&gt;
- &lt;/ul&gt;
- &lt;/xt:component&gt;
- &lt;/xt:head&gt;
-&lt;/head&gt;
-&lt;body&gt;
- &lt;h1&gt;&lt;xt:use types="text" label="title"&gt;Meeting title&lt;/xt:use&gt;&lt;/h1&gt;
- &lt;blockote&gt;
- &lt;xt:use types="text" label="goal"&gt;Goal&lt;/xt:use&gt;
- &lt;/blockote&gt; 
- &lt;h2&gt;Present&lt;/h2&gt;
- &lt;xt:use types="listOfParticipants" label="present" <strong>flow="participants"</strong>/&gt; 
- &lt;h2&gt;Decisions&lt;/h2&gt;
- &lt;ul&gt;
- &lt;xt:repeat minOccurs="0" maxOccurs="*" label="decisions"&gt;
-    &lt;li&gt;&lt;xt:use types="text" label="decision"&gt;decision&lt;/xt:use&gt;&lt;xt:menu-marker/&gt;&lt;/li&gt;
- &lt;/xt:repeat&gt;
- &lt;/ul&gt;
- &lt;h2&gt;Excused&lt;/h2&gt;
- &lt;xt:use types="listOfParticipants" label="excused" <strong>flow="participants"</strong>/&gt; 
-&lt;/body&gt;
-&lt;/html&gt;</pre>
-    <p>If serialized as a single document, the template would generated the following type of XML content that is called a tide; the first children of the <tt>xt:tide</tt> root element is the XML content of the main document (i.e. the main flow), while each of the other first level children represents a different flow:</p>
-    <pre>&lt;xt:tide xmlns:xt="http://ns.inria.org/xtiger"&gt;
- &lt;minutes&gt;
-   &lt;title&gt;Library decoration&lt;/title&gt;
-   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
-   &lt;decisions&gt;
-     &lt;decision&gt;bring a ficus&lt;/decision&gt;
-   &lt;/decisions&gt;
- &lt;/minutes&gt;
- &lt;participants&gt;
-   &lt;present&gt;
-     &lt;name&gt;Alice&lt;/name&gt;
-     &lt;name&gt;Bob&lt;/name&gt;
-   &lt;/present&gt;
-   &lt;excused&gt;
-     &lt;name&gt;Charles&lt;/name&gt;
-   &lt;/excused&gt;
- &lt;/participants&gt;
-&lt;/xt:tide&gt; </pre>
-    <p>The same content that would be generated from the same template without the separate participants flow attributes would generate the following XML content:</p>
-    <pre>&lt;minutes&gt;
- &lt;title&gt;Library decoration&lt;/title&gt;
-   &lt;goal&gt;Define which plants we should bring to improve our library room. &lt;/goal&gt;
-   &lt;present&gt;
-     &lt;name&gt;Alice&lt;/name&gt;
-     &lt;name&gt;Bob&lt;/name&gt;
-   &lt;/present&gt;
-   &lt;decisions&gt;
-     &lt;decision&gt;bring a ficus&lt;/decision&gt;
-   &lt;/decisions&gt;
-   &lt;excused&gt;
-     &lt;name&gt;Charles&lt;/name&gt;
-   &lt;/excused&gt;
-&lt;/minutes&gt;</pre>
+    <p><em>The "flow" attribute has been removed on May 10, 2013. It has been deprecated to simplify XTiger implementations, and because it can be replaced with server-side code to aggregate / dispatch document fragments from / to multiple sources.</em></p>
   </body>
 </html>
